@@ -1,9 +1,11 @@
 package com.cn.lx.client.handler;
 
 import com.cn.lx.protocol.command.Packet;
-import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.command.PacketCodeC;
+import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.response.LoginResponsePacket;
+import com.cn.lx.protocol.response.MessageResponsePacket;
+import com.cn.lx.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -15,6 +17,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * 我们实现在客户端连接上服务端之后，立即登录。在连接上服务端之后，Netty 会回调到 ClientHandler 的 channelActive() 方法
+     *
      * @param ctx
      */
     @Override
@@ -45,16 +48,17 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         // 解码
         Packet packet = PacketCodeC.INSTANCE.decode(byteBuf);
 
-        if (packet instanceof LoginResponsePacket){
+        if (packet instanceof LoginResponsePacket) {
             LoginResponsePacket loginResponsePacket = (LoginResponsePacket) packet;
             if (loginResponsePacket.isSuccess()) {
+                LoginUtil.markAsLogin(ctx.channel());
                 System.out.println(new Date() + ": 客户端登录成功");
             } else {
                 System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
             }
+        } else if (packet instanceof MessageResponsePacket) {
+            MessageResponsePacket messageResponsePacket = (MessageResponsePacket) packet;
+            System.out.println(new Date() + ": 收到服务端的消息: " + messageResponsePacket.getMessage());
         }
-
-
-
     }
 }

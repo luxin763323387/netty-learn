@@ -1,16 +1,21 @@
 package com.cn.lx.client;
 
 import com.cn.lx.client.handler.ClientHandler;
-import com.cn.lx.client.handler.FirstClientHandler;
+import com.cn.lx.protocol.command.PacketCodeC;
+import com.cn.lx.protocol.request.MessageRequestPacket;
+import com.cn.lx.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class NettyClient {
@@ -37,16 +42,18 @@ public class NettyClient {
                     }
                 });
         // 4.建立连接
-        connect(bootstrap,HOST,PORT,MAX_RETRY);
+        connect(bootstrap, HOST, PORT, MAX_RETRY);
     }
 
-    public static void connect(Bootstrap bootstrap, String host, int port, int retry){
-        bootstrap.connect(host,port).addListener(future -> {
+    public static void connect(Bootstrap bootstrap, String host, int port, int retry) {
+        bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
+                Channel channel = ((ChannelFuture) future).channel();
+                startConsoleThread(channel);
                 System.out.println("连接成功!");
-            } else if(retry == 0) {
+            } else if (retry == 0) {
                 System.err.println("重试次数已用完，放弃连接！");
-            }else {
+            } else {
                 int order = (MAX_RETRY - retry) + 1;
                 // 本次重连的间隔
                 int delay = 1 << order;
@@ -55,4 +62,23 @@ public class NettyClient {
             }
         });
     }
+
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (LoginUtil.hasLogin(channel)) {
+                    System.out.println("输入消息发送至服务端: ");
+                    Scanner sc = new Scanner(System.in);
+                    String line = sc.nextLine();
+
+                    MessageRequestPacket packet = new MessageRequestPacket();
+                    packet.setMessage(line);
+                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
+                    channel.writeAndFlush(byteBuf);
+                }
+            }
+        }).start();
+    }
+
+
 }

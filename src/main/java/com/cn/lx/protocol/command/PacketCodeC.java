@@ -1,7 +1,9 @@
 package com.cn.lx.protocol.command;
 
 import com.cn.lx.protocol.request.LoginRequestPacket;
+import com.cn.lx.protocol.request.MessageRequestPacket;
 import com.cn.lx.protocol.response.LoginResponsePacket;
+import com.cn.lx.protocol.response.MessageResponsePacket;
 import com.cn.lx.serializer.Serializer;
 import com.cn.lx.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -22,8 +24,10 @@ public class PacketCodeC {
 
     static {
         packetTypeMap = new HashMap<>();
-        packetTypeMap.put(LOGIN_REQUEST, LoginRequestPacket.class);
-        packetTypeMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Common.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(Common.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Common.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Common.MESSAGE_RESPONSE, MessageResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
