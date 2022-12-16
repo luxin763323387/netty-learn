@@ -1,8 +1,8 @@
 package com.cn.lx.server.handler;
 
-import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.command.Packet;
 import com.cn.lx.protocol.command.PacketCodeC;
+import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.request.MessageRequestPacket;
 import com.cn.lx.protocol.response.LoginResponsePacket;
 import com.cn.lx.protocol.response.MessageResponsePacket;

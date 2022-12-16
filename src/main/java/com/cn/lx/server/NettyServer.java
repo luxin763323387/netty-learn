@@ -1,5 +1,9 @@
 package com.cn.lx.server;
 
+import com.cn.lx.codec.PacketDecoder;
+import com.cn.lx.codec.PacketEncoder;
+import com.cn.lx.server.handler.LoginRequestHandler;
+import com.cn.lx.server.handler.MessageRequestHandler;
 import com.cn.lx.server.handler.ServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -37,7 +41,12 @@ public class NettyServer {
                 // 我们调用childHandler()方法，给这个引导类创建一个ChannelInitializer，这里主要就是定义后续每条连接的数据读写
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
-                        ch.pipeline().addLast(new ServerHandler());
+                        //ch.pipeline().addLast(new ServerHandler());
+                        // 服务端先解码，在处理业务，在编码
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 

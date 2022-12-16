@@ -1,6 +1,10 @@
 package com.cn.lx.client;
 
 import com.cn.lx.client.handler.ClientHandler;
+import com.cn.lx.client.handler.LoginResponseHandler;
+import com.cn.lx.client.handler.MessageResponseHandler;
+import com.cn.lx.codec.PacketDecoder;
+import com.cn.lx.codec.PacketEncoder;
 import com.cn.lx.protocol.command.PacketCodeC;
 import com.cn.lx.protocol.request.MessageRequestPacket;
 import com.cn.lx.util.LoginUtil;
@@ -38,7 +42,11 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new ClientHandler());
+                        //ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
         // 4.建立连接
