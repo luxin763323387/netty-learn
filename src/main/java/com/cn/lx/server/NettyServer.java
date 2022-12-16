@@ -2,6 +2,8 @@ package com.cn.lx.server;
 
 import com.cn.lx.codec.PacketDecoder;
 import com.cn.lx.codec.PacketEncoder;
+import com.cn.lx.codec.Spliter;
+import com.cn.lx.server.handler.FirstServerHandler;
 import com.cn.lx.server.handler.LoginRequestHandler;
 import com.cn.lx.server.handler.MessageRequestHandler;
 import com.cn.lx.server.handler.ServerHandler;
@@ -42,7 +44,9 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     protected void initChannel(NioSocketChannel ch) {
                         //ch.pipeline().addLast(new ServerHandler());
+                        //ch.pipeline().addLast(new FirstServerHandler());
                         // 服务端先解码，在处理业务，在编码
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());

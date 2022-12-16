@@ -1,15 +1,13 @@
 package com.cn.lx.client;
 
-import com.cn.lx.client.handler.ClientHandler;
 import com.cn.lx.client.handler.LoginResponseHandler;
 import com.cn.lx.client.handler.MessageResponseHandler;
 import com.cn.lx.codec.PacketDecoder;
 import com.cn.lx.codec.PacketEncoder;
-import com.cn.lx.protocol.command.PacketCodeC;
+import com.cn.lx.codec.Spliter;
 import com.cn.lx.protocol.request.MessageRequestPacket;
 import com.cn.lx.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -43,6 +41,8 @@ public class NettyClient {
                     @Override
                     public void initChannel(SocketChannel ch) {
                         //ch.pipeline().addLast(new ClientHandler());
+                        //ch.pipeline().addLast(new FirstClientHandler());
+                        ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
@@ -78,11 +78,13 @@ public class NettyClient {
                     System.out.println("输入消息发送至服务端: ");
                     Scanner sc = new Scanner(System.in);
                     String line = sc.nextLine();
+                    channel.writeAndFlush(new MessageRequestPacket(line));
 
-                    MessageRequestPacket packet = new MessageRequestPacket();
-                    packet.setMessage(line);
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
-                    channel.writeAndFlush(byteBuf);
+
+//                    MessageRequestPacket packet = new MessageRequestPacket();
+//                    packet.setMessage(line);
+//                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(), packet);
+//                    channel.writeAndFlush(byteBuf);
                 }
             }
         }).start();
