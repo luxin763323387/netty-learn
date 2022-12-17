@@ -3,6 +3,7 @@ package com.cn.lx.server;
 import com.cn.lx.codec.PacketDecoder;
 import com.cn.lx.codec.PacketEncoder;
 import com.cn.lx.codec.Spliter;
+import com.cn.lx.server.handler.AuthHandler;
 import com.cn.lx.server.handler.FirstServerHandler;
 import com.cn.lx.server.handler.LoginRequestHandler;
 import com.cn.lx.server.handler.MessageRequestHandler;
@@ -49,6 +50,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }

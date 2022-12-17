@@ -2,6 +2,7 @@ package com.cn.lx.server.handler;
 
 import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.response.LoginResponsePacket;
+import com.cn.lx.util.LoginUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -21,6 +22,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         if (valid(loginRequestPacket)){
             loginResponsePacket.setSuccess(true);
             System.out.println(new Date() + ": 客户端登录成功");
+            LoginUtil.markAsLogin(ctx.channel());
         }else {
             System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());
         }
