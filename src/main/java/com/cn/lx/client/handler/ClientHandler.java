@@ -5,7 +5,6 @@ import com.cn.lx.protocol.command.PacketCodeC;
 import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.response.LoginResponsePacket;
 import com.cn.lx.protocol.response.MessageResponsePacket;
-import com.cn.lx.util.LoginUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -27,7 +26,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         // 创建登录对象
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
         loginRequestPacket.setUserId(UUID.randomUUID().toString());
-        loginRequestPacket.setUsername("flash");
+        loginRequestPacket.setUserName("flash");
         loginRequestPacket.setPassword("pwd");
 
         // 编码
@@ -51,7 +50,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         if (packet instanceof LoginResponsePacket) {
             LoginResponsePacket loginResponsePacket = (LoginResponsePacket) packet;
             if (loginResponsePacket.isSuccess()) {
-                LoginUtil.markAsLogin(ctx.channel());
+                //LoginUtil.markAsLogin(ctx.channel());
                 System.out.println(new Date() + ": 客户端登录成功");
             } else {
                 System.out.println(new Date() + ": 客户端登录失败，原因：" + loginResponsePacket.getReason());

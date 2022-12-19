@@ -2,13 +2,18 @@ package com.cn.lx.protocol.request;
 
 import com.cn.lx.protocol.command.Common;
 import com.cn.lx.protocol.command.Packet;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 消息发送
  */
 @Data
+@AllArgsConstructor
 public class MessageRequestPacket extends Packet {
+
+    private String toUserId;
 
     private String message;
 
