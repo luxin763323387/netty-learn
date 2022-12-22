@@ -4,7 +4,6 @@ import com.cn.lx.protocol.command.Common;
 import com.cn.lx.protocol.command.Packet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * 消息发送

@@ -1,6 +1,5 @@
 package com.cn.lx.client.handler;
 
-import com.cn.lx.protocol.request.LoginRequestPacket;
 import com.cn.lx.protocol.response.LoginResponsePacket;
 import com.cn.lx.session.Session;
 import com.cn.lx.util.SessionUtil;
@@ -8,7 +7,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.Date;
-import java.util.UUID;
 
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
     @Override

@@ -8,8 +8,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.util.Date;
-
 /**
  * 消息请求数据包
  */
